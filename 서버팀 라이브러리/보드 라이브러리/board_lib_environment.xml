@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<config>	
+	<board>
+		<max_user>100</max_user>
+		<max_room_user>4</max_room_user>
+		<max_room_observer_user>1</max_room_observer_user>
+		<max_room>10</max_room>
+		<room_mode>0</room_mode>
+		<notify>
+			<idx>0</idx>
+			<time_sec>10</time_sec>
+			<contents>test notify</contents>
+			<area>0</area>
+			<type>0</type>
+		</notify>
+
+	</board>
+	
+</config>
+
+

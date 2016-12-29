@@ -1,0 +1,570 @@
+##########base_library###########
+
+
+BaseDefine.h
+
+플랫폼 호환과 편의를 위한 각종 매크로를 정의한 헤더 입니다.
+
+모든 Base Library가 포함하는 최상위 헤더입니다.
+
+기본적인 인클루드와 정의 선언을 해줍니다.
+
+대부분 시스템 정보 조회 및 플랫폼 호환을 위한 함수들
+
+예를들면
+
+#define IS_NULL_RETURN[p,r]	if[ p==0 ] return r;
+#define IS_NOT_NULL_RETURN[p,r]	if[ p!=0 ] return r;
+
+#define SAFE_FREE[m]	if[ m!=0 ] {free[m]; m=0;}
+#define SAFE_DELETE[m]	if[ m!=0 ] {delete m; m=0;} 
+
+
+
+
+
+
+
+BindTable.h
+
+
+??????????????????
+어떤 데이터들의 바인드 관계 표현 클래스를 정의합니다.
+
+어떤 데이터들의 바인드 집합 입니다.
+인스턴스를 해제해 주지는 않는다
+
+class BindTable
+바인드 집합 표현
+map의 래퍼이며, 맴버 메서드가
+뮤텍스로 동기화한다는 특징이
+있다.
+
+
+
+Bitfield.h
+
+
+배열로 비트필드를 표현하는 클래스 정의
+비트&비트필드 연산 매크로 정의 
+
+/*
+* @class BitField
+*  - 비트 배열 생성
+*  - 0이란 인덱스는 존재하지 않는다 
+*  - 1번째 비트 부터 생성자에서 지정한 count까지 지정된다 
+*/
+
+
+
+BusyWaiter.h
+
+횟수 기반 wait 클래스 정의
+
+class BusyWaiter
+wait()
+wait_time이 0이면 무조건 Sleep(0)하고 리턴
+아니면 wait_count_만큼 wait()이 호출되었을 때까지 Sleep( wait_time_ )
+
+
+
+cycle.h
+
+루프 시간 조절 클래스 정의
+
+/**
+* @class CCycle
+*  - 루프 매니저 객체
+*  - 일정시간안에 다시 돌아왔다면 번시간만큼 쉰다
+*/
+
+DeleteObjInSTL.h
+
+STL 안의 오브젝트를 일괄 delete 하기 위한 유틸리티 클래스 정의
+오브젝트는 동적 할당된 포인터(new[]가 아닌 new로)이어야 한다.
+
+/**
+* @class CDeleteObjInSTL
+*  - STL에 들어있는 인스턴스들을 삭제하고 컨테이너를 clear한다
+*  - 내용물이 동적할당된 포인터여야 한다
+*/
+
+
+DoubleQueue.h
+
+FileObj.h
+
+하나의 파일에 대한 래퍼 클래스를 정의
+
+특이사항
+checkVaildName(char* 파일명)
+파일을 열기 전에 호출하는 private 맴버 메서드
+path 구분자가 틀렸거나 공백이 있으면, 그 부분을 “_”로 변경
+ex1) windows에서 “c:/”를 주면 “c_/”로 변경
+ex2) 리눅스에서 “c:”를 주면 “c_”로 변경
+잘못 사용하였을 경우, 낮은 확률로 오작동의 위험 존재
+
+
+IniFile.h
+
+ini 파일에 대한 래퍼 클래스를 정의
+
+INI 파일 전제조건
+INI 파일은 [섹션_이름]의 형태로 구분된 섹션을 가질 수 있다.
+섹션 아래에 옵션 이름과 그에 대한 값이 기술된다.
+옵션 이름과 그에 대한 값은 =로 구분되며 한 줄에 기술되어야 한다.
+같은 섹션에 중복된 옵션 이름이 존재하는 경우, 위쪽의 값이 선택된다.
+중복된 섹션 이름이 존재하는 경우, 위쪽의 섹션이 선택된다.
+
+keyValueManager.h
+
+STL map의 래퍼 클래스를 정의
+
+
+
+/*
+* @class KeyObjManager
+*  - map에 대한 래퍼
+*  - isEnd를 없애고 nextCursor로 통일하는게 좋을듯함 
+*/
+
+
+KeyMultiValueManager.h
+
+STL multimap의 래퍼 클래스 정의
+
+
+LimitInstanceMgr.h
+제한된 갯수의 인스턴스를 운용하기 위한 클래스 정의
+순수 추상 메서드인 create()와 close() 포함 
+
+
+
+log.h
+
+파일 로깅을 위한 클래스 정의
+CLogLock 클래스 정의
+크리티컬 섹션, pthread mutex의 래퍼
+
+logservice.h
+
+CLog 컨테이너 클래스 정의
+
+initialize()
+주어진 xml config 파일을 기반으로 CLog를 동적할당/ 세팅
+
+
+	TIXmlNode* node  
+	TIXmlElemet element -- tinyxml객체 변수 element 선언
+
+	node = element->FirstChild("log_info");
+	// 이 함수는 바로 아래 Child를 가져오는 함수인데. 어디든 바로 FirstChild() 호출하면
+	// 바로 다음 sibling 노드의 위치가 리턴된다. 단, LoadFile이후에 FirstChild()를 호출하게 되면
+	// 루트 엘리먼트가 아닌 <?xml version = ... >의 주소가 리턴되니 제일 처음엔
+	// 노드 이름을 알고 있어서 FirstChild( "노드명" )을 해주던가 root에서 FirstChild()를 호출하는 방법으로
+	// 시작하자.
+
+
+
+
+
+LumpData.h
+
+바이트 수준의 데이터를 다루기 위한 클래스 정의
+
+/**
+* @class CLumpData
+*  - 버퍼에 바이트별 내용을 push/pop 한다  put/get
+*/
+
+생성자에 버퍼를 주면 호출자가 버퍼 삭제의 책임이 있음
+생성자에 크기를 주면 동적 할당하여 관리하고, 소멸자가 삭제
+
+
+NumericTime.h
+
+숫자 기반 시간 클래스 정의
+
+ 월에 따른 마지막 날짜 구하기
+
+
+objectPool.h
+
+오브젝트를 생성/관리하는 클래스 정의
+
+sharememory.h
+
+공유 메모리 파일 클래스 정의
+windows : MapViewOfFile()
+시스템 페이징 파일 사용
+linux : shmget()
+
+
+Start_End_Time.h
+
+시작, 끝 시간을 저장하는 유틸리티 클래스 정의
+LogService를 이용해 시작, 끝을 로깅
+
+
+
+socket.h
+
+소켓 래퍼 클래스 정의 
+
+포함하는 헤더
+
+  BaseDefine.h
+  windows
+  mstcpip.h
+  linux
+  각종 리눅스 네트워크 헤더
+
+StaticProcessInfo.h
+
+프로세스의 시작/종료/예외를 기록하는 클래스 정의
+프로그램에서 예외가 발생했을 때, 덤프를 남기는 것이 주요 기능
+
+stringObj.h
+C++ 표준 string의 래퍼 클래스를 정의
+
+
+
+thread.h
+
+스레드(win32 thread & pthread) 래퍼 클래스 정의
+크리티컬 섹션과 뮤텍스 래퍼 클래스 정의
+
+
+CLock
+크리티컬 섹션(windows) / pthread mutex(linux)의 래퍼
+Notify
+thread의 suspend(wait())와  resume(call())을 수행
+java의 notify()와 달리 wait()까지 포함
+프렌드 클래스는 linux에서만 활용
+특이사항
+win32 / wait(wait_time)에서 Sleep()이 누락된 것 같다
+
+BlanketLock
+CLock의 래퍼 클래스
+setLock()을 통해 외부에서 만든 lock을 제어할 수 있다.
+CThread
+thread의 래퍼 클래스
+
+
+tickSaver.h
+
+타이머 클래스 정의
+
+Tokenizer.h
+
+토큰 처리 유틸리티 클래스 정의
+
+work.h
+
+작업 관리자
+
+Class WorkListener
+상속 받아서 Work에 대한 처리를 구현
+네트워크 라이브러리에서의 활용
+workPerformed()
+하나의 세션에 대한 일반적인 이벤트를 처리
+specificPerformed()
+세션의 접속, 종료와 같은 소켓 이벤트가 발생했을 때의 처리
+threadPerformed()
+현재 수행중인 스레드가 주기적으로 할 일
+sparePerformed()
+머신 상황이 여유가 있을 때, 할 일
+orderPerformed()
+모든 세션에 대해 공통적으로 보낼 메시지를 처리
+
+MemoryLeakDetector.h
+
+Windows만 구현
+
+class CMemoryLeakDetector
+생성자
+_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF | _CRTDBG_CHECK_ALWAYS_DF );
+소멸자
+_CrtDumpMemoryLeaks();
+덤프를 보고 브레이크                                                                         포인트 설정
+
+
+WaitQueue.h
+
+WaitQueue 클래스 정의
+
+class WaitQueue
+
+push
+중복 키를 허용하지 않음
+중복 키가 존재하지만 timeout 이후라면, 중복 키를 컨테이너에서 제거하고, 새 값 삽입
+제거된 기존 데이터는 어떻게 처리? 확인 방법이 없는데 문제는 없는지?
+
+pop
+timeout과 상관 없이 키에 대한 값을 pop
+pop_timeout
+timeout이 지난 값들을 인자로 받은 vector에 push_back() 
+
+
+
+
+####################network_library#########################
+
+NetworkUtil.h
+
+IP, MAC 주소 등을 구하는 유틸리티 집합 클래스 정의
+
+
+종속된 라이브러리
+Base Library
+카테고리
+넷 서비스 (상세 UML / 요약 UML(windows/iocp/KeyParser))
+네트워크 유틸리티
+패킷 파싱, 프로토콜 정의  등
+세션
+IO 리스너
+로그 기록, 시간 계산, 시스템 정보 조회 등
+
+
+
+ServerLib_Define.h
+네트워크 관련 상수와 에러 메세지 출력 함수를 정의
+
+int getNetworkErrorNo()
+발생한 에러의 번호 반환
+print_network_error()
+발생한 에러를 문자열으로 로깅
+포함된 헤더
+BaseDefine.h
+LogService.h
+ObjectPool.h
+
+
+NetParser.h
+
+
+NetParser.h
+패킷을 해석하고, 만드는 클래스를 정의
+
+NetParser (abstract class)
+KeyParser
+패킷의 구조(리틀엔디안 기준. 코드상에선 헤더를 4바이트 단위로 뒤집어 표현해야 함)
+
+
+ByteParser
+헤더 없음
+parser_write(), reset() 등의 메서드는 바디가 구현이 되어있지 않음. parse_proc()만이 의미가 있으므로 따로 사용하지 말아야 함.
+
+
+NetInstanceBuilder.h
+리스너와 세션 오브젝트 생성을 위한 ObjectPool 확장 클래스 정의
+
+NetServiceOrder.h
+모든 세션에게 일괄적으로 패킷을 보내기 위해 저장하는 버퍼 클래스 정의
+
+
+ProtocolBinder.h
+여러 프로토콜을 정의하여 사용하는 것을 돕기 위한 클래스 정의
+ProtocolBinder 예상 사용 시나리오
+1. 프로토콜 처리 함수를 구현
+2. 고유한 번호를 붙여 registerProtocol()로 구현한 프로토콜 처리 함수를 등록
+3. 고유한 번호로 등록했던 프로토콜을 checkProtocol로 현재 사용할 프로토콜로 설정
+4. processProtocol()로 데이터를 넘겨 프로토콜 처리 함수를 호출해 처리
+특이사항
+checkProtocol()의 3번째 인자 CLumpData* data는 사용되지 않음
+
+
+NetworkSession
+연결된 소켓과 그에 대한 버퍼 관리, send/recv 연산을 정의하는 추상 클래스
+구현된 클래스
+SessionOverlapped
+win32 IOCP_IOListener에서만 사용
+SessionSync
+lock을 걸어서 동기화를 보장
+
+
+
+세션
+
+NetworkSession
+연결된 소켓과 그에 대한 버퍼 관리, send/recv 연산을 정의하는 추상 클래스
+구현된 클래스
+SessionOverlapped
+win32 IOCP_IOListener에서만 사용
+SessionSync
+lock을 걸어서 동기화를 보장
+
+
+IO 리스너
+
+Network_IOListener
+SELECT_IOListener
+IOCP_IOListener
+win32
+EPoll_IOListener
+linux
+
+넷 서비스
+
+NetLibs
+NetworkInitailize
+MsgPool
+NetworkStat
+NetworkConfig
+NetService
+
+
+NetLibs.h
+
+네트워크 서비스를 위한 유틸리티 클래스 정의
+NetworkInitailize
+네트워크 초기화를 수행
+MsgPool
+메세지 저장을 위한 ObjectPool
+NetworkStat
+현재 세션 수, 버퍼 사용, 메인 루프 카운터 등을 공유메모리에 저장
+NetworkConfig
+서버의 config를 읽고, 관리
+
+NetService.h
+
+네트워크 서비스를 위한 메인 스레드 클래스 정의
+넷 서비스 (상세 UML / 요약 UML(windows/iocp/KeyParser))
+
+
+NetService::StartService() 시퀀스
+
+config 클래스 등을 통해 각종 자원을 초기화
+IO리스너 스레드 실행
+소켓 이벤트를 처리
+패킷이 오면 NetService 메세지 큐에 소켓ID와 패킷을 push
+NetService 메인 스레드 실행
+Loop 
+모든 세션을 확인해 해제될 세션을 끊고, 말소
+WorkListener 메서드들을 호출하여 패킷 처리 등의 Work 수행
+
+
+###################database_library###################
+
+
+Database Library
+카테고리
+	DB Service
+	DB interface
+	odbc
+	mysql
+	DB Service 유틸리티
+	쿼리 큐
+	DB 타입 매칭 바인드 테이블
+	SQL 문자열 정리
+
+
+Database API
+DBService
+DBSessionProxy
+DBSessionManager
+DBSession
+DBStatement
+DBResultSet
+DBError
+위의 4개의 클래스를 상속받아 ODBC / mysql 구현
+
+DBService.h
+DB Session을 총괄 유지/관리하는 클래스 정의
+포함하는 헤더
+Thread.h
+대부분의 DB 라이브러리
+다수의 base 라이브러리
+
+class DBService
+singleton class
+DB 세션을 맺고, 쿼리를 수행하기 위해 반드시 사용
+DBString 같은 별개의 유틸리티를 제외하고는 단독으로 사용 불가
+반드시 DBService::initialize()를 가장 먼저 실행해야 함
+initialize()를 실행하면 DBService 스레드가 시작
+
+
+DBSessionProxy.h
+DBService 스레드에서 DB 세션을 얻어오기위한  클래스 정의
+오직 DBSessionProxy::get()을 통해 DBSession을 얻을 수 있음
+세션 사용을 마쳤으면, DBSessionProxy::release() 호출
+
+
+DBSessionManager.h
+DB Session을 관리하는 LimitInstanceMgr
+DBSessionProxy와 DBService 스레드 간의 매개체 역할을 한다
+
+DBSession.h
+DBSession 인터페이스 정의
+DBStatement를 받아와 쿼리를 실행할 수 있다.
+DBError를 받아와 쿼리 수행 에러 정보를 확인하여 처리할 수 있다. 
+
+
+DBStatement.h
+쿼리를 실행하기 위한 DBStatement 인터페이스 정의
+결과는 DBResultSet 클래스를 통해 확인할 수 있다.
+에러는 DBSession에 세팅된다.
+
+
+DBResultSet.h
+쿼리 수행 결과가 담기는 인터페이스
+next()를 먼저 호출해야 첫번째 줄이 세팅된다.
+
+특이사항
+참조되지 않는 선언
+
+DBError.h
+쿼리 수행 에러가 담기는 인터페이스
+
+
+Database utility
+DBAccount
+DBStat
+DBTypeTable
+DBQueryQueue
+
+
+DBLibs.h
+DBStat, DBAccount, DBTableDescription 클래스 정의
+
+
+DBStat
+DB Session 유휴/활동 정보를 공유메모리에 기록
+특이사항
+DBStat::STSharedDBStat::main_loop 초기화 누락
+DBStat::initialize()에서 한번 더 초기화하므로 시퀀스 상에 문제는 없음
+memset( pData, 0, sizeof( STSharedDBStat ) );
+
+DBAccount
+DB 계정 정보 저장을 위한 클래스
+get/set 메서드로 구성
+DBTableDescription
+DB 테이블 정보 저장 클래스
+
+DBTypeTable.h
+DBMS간 타입 변환을 위한 유틸리티 클래스 정의
+
+DBQueryQ.h
+쿼리를 스레드로 처리하기 위한 queue 클래스 정의
+WorkListener와 Work을 구현해 쿼리 처리
+WorkListener가 받는 Work이 하나로 고정 되어있음
+쿼리에 따라 별개의 처리를 하려면
+DBQueryQ를 상속받아 확장 구현
+쿼리를 파싱
+Work 객체의 타입을 활용할 수 없는 것이 아쉬움
+
+
+DBString.h
+쿼리 문자열 연산을 위한 유틸리티 클래스 정의
+라이브러리에 사용되진 않음
+
+
+
+
+
+
+
+
+ 
+
+

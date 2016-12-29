@@ -1,0 +1,1011 @@
+(서비스 사업실 서버팀 유동금)
+
+(Library_세미나) 발표 시작하겠습니다.
+
+
+
+
+
+래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼
+(래퍼란 필요한 데이터를 받거나 쓰기 위해 데이터 형태를 세팅해 제공하는 서비스)
+래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼
+
+
+
+
+먼저 Base Library부터 보겠습니다.
+
+Base Library는 범용 연산에 편의를 돕기 위한 라이브러리로
+
+파일, 소켓, 스레드, 문자열처리,
+
+로그 기록, 시간 계산, 시스템 정보 조회등을 지원하고
+
+STL확장 자료구조도 지원합니다.
+
+
+그러면 base Library에 있는 헤더파일을 하나씩 분석해 보겠습니다.
+
+
+
+
+
+######BaseDefine.h######
+
+먼저 BaseDefine.h는
+
+모든 Base Library가 포함하는 최상위 헤더로
+
+여러 플랫폼 호환과 편의를 위해 각종 메크로를 정의해 놓은 header파일 입니다.
+
+포함하는 헤더로는 
+
+iostream 외 기타표준, 시스템, 소켓 함수들이 있고
+ShelConnect.h 와 Tokenizer.h 또한 포함하고 있습니다.
+
+
+
+BaseDefine 헤더에 정의 되어있는 여러 class중 몇가지 살펴 보겠습니다.
+
+
+SystemInfomation이라고 하는 class는 
+
+시스템 정보 조회를 위해 정적 멤버 함수들을 갖는 utility class로
+
+cpu count, os name, linux_kernel_version, available_iocp, hyperthread등의 정보를 가집니다.
+
+
+
+ArgInfo라고 하는 class는
+
+프로그램 인자 저장을 위한 utility class로
+
+size와 다양한 형변환 함수를 가지고 있습니다.
+
+
+ErrorInfomation이라고 하는 class는
+
+하나의 에러 정보를 표현하는 class로
+
+에러에 해당하는 함수 코드 메세지 라인 등을 리턴하는 함수들을 가지고 있습니다.
+
+######BaseDefine.h######
+
+
+
+
+
+######StringObj.h######
+
+
+StringObj.h는 string Util class로
+
+C++ 표준 String의 래퍼 클래스를 정의합니다.
+
+포함하는 헤더로는
+
+stdlib.h, string.h, windows가 있고, BaseDefine.h는 포함하지 않습니다.
+
+
+StringObj에는 StringObj class하나만 있는데
+
+각종 연산자 오버라이딩 함수랑
+
+string관련 함수
+
+형변환 함수
+
+getByteType함수 등이 있습니다.
+
+######StringObj.h######
+
+
+
+######fileObj.h######
+
+fileObj.h는 하나의 파일에 대한 래퍼 클래스를 정의합니다.
+
+포함하는 헤더파일은 BaseDefine.h가 있습니다.
+
+fileObj에도 fileObj클래스 하나만 있는데
+
+파일 존재 유무 확인 함수,
+
+파일 삭제 함수,
+
+파일 열기 / 닫기 함수,
+
+파일 속 내용 읽기,파일 사이즈 체크 새로고침 등등 함수가 있습니다.
+
+
+######fileObj.h######
+
+
+######IniFile.h######
+IniFile.h 는 ini파일에 대한 래퍼 클래스를 정의합니다.
+
+(ini파일이란)
+간단히 말하면 응용 프로그램이 실행될 때 필요한 초기화 정보를 담고있는 파일 
+(INItialization file)
+
+포함하는 헤더 파일은 FileObj.h가 있습니다.
+
+IniFile.h에도 마찬가지로 CIniFile클래스 하나만 있는데
+
+파일을 Read함수
+	Write함수
+	Remove함수 등이 있습니다. 
+
+######IniFile.h######
+
+######BitField.h#####
+BitField.h는 배열로 비트필드를 표현하는 클래스를 정의합니다.
+또한
+비트와비트필드 연산 매크로를 정의합니다.
+
+포함하는 헤더는
+
+BaseDefine.h가 있습니다.
+
+
+BitField.h에는 BitField 클래스가 있는데
+
+BitField클래스는
+
+비트 배열을 생성하고
+
+
+특이점으로는 
+
+0이란 인덱스는 존재하지 않고, 1번째 비트 부터 생정자에서 지정한 count까지 지정됩니다.
+
+
+array를 초기화 하는 함수
+
+index를 찾는 함수
+
+사이즈 확인 함수 등이 있습니다.
+
+
+######BitField.h#####
+
+
+#####Socket.h#####
+Socket.h는 소켓 래퍼 클래스를 정의합니다.
+
+포함하는 헤더로는 
+
+BaseDefine.h,windows헤더 ,각종 Linux 네트워크 헤더 등이 있습니다.
+
+Socket.h에 socket class에는 
+
+각종 소캣연결에 필요한 함수와 (connect, accept, listen, closesocket,)
+
+setTimeOut함수(time값 리턴)
+
+setTcpNoDealy함수(flag 리턴)
+
+setIOType함수(block 하는 역할 [bool isBlock 변수 리턴] ) 등이 있다
+ 
+#####Socket.h#####
+ 
+
+
+#####Thread.h#####
+
+
+
+thread.h 는 스레드 (win32 thread & pthread) 래퍼 클래스,
+크리티컬 섹션과 뮤텍스 래퍼 클래스를 정의합니다.
+
+포함하는 헤더는
+
+BaseDefine.h
+
+windows
+
+linux
+각종 리눅스 네트워크 헤더를 포함합니다.
+
+thread.h 에는 Clock,Notify,BlanketLock,CThread 총 4개의 클래스가 정의 되어 있습니다.
+
+Clock
+크리티컬 섹션(windows)/pthread mutex(linux)의 래퍼
+
+Notify
+therad의 suspend(wait())와 resume(call())을 수행
+
+
+
+BlanketLock
+CLock의 래퍼 클래스
+setLock()을 통해 외부에서 만든 lock을 제어할 수 있다.
+
+락이 필요한 부분에서 호출만 해준다.
+(소멸자에서 Exit해주기 때문에 따로 Leave를 안해줘도 됩니다.)
+
+CThread
+thread의 래퍼 클래스
+
+스레드의 동작을 관리하는 클래스 
+
+start, active, stop, resume(실행대기상태로 만듬), suspend(일시정지), getId 등의 함수 존재
+
+
+
+#####Thread.h#####
+
+
+######shareMemory.h######
+shareMemory.h는 공유 메모리 파일 클래스를 정의합니다..
+
+포함하는 헤더는
+BaseDefine.h
+
+shareMemory클래스를 상속받는 클래스
+WinShareMemory랑 UnixShareMemory를 이용하여 
+두 플렛폼을 모두 관리한다.
+
+
+######shareMemory.h######
+
+
+##### Log.h #####
+Log.h는 파일 로깅을 위한 클래스를 정의합니다.  (파일 로깅이란....)
+
+포함하는 헤더는 BaseDefine.h가 있습니다.
+
+CLogLock 클래스를 정의합니다.
+ 크리티컬 섹션, pthread mutex의 래퍼
+
+##### Log.h #####
+
+
+
+####LogService.h####
+CLog 컨테이너 클래스를 정의합니다.
+
+포함하는 헤더는 BaseDefine.h, StringObj.h, tinyxml.h가 있습니다.
+
+LogService클래스는 주어진 xml config파일을 기반으로 CLog를 동적 할당/세팅한다
+
+####LogService.h####
+
+
+
+####BusyWaiter.h####
+
+횟수 기반 wait 클래스를 정의합니다.
+
+포함된 헤더는 BaseDefine.h가 있습니다.
+
+BusyWaiter 클래스 안에
+
+wait()
+ wait time이 0이면 무조건 Sleep(0)하고 리턴
+ 아니면 wait_count_만큼 wait()이 호출되었을 때까지 Sleep( wait_time_ )
+
+
+####BusyWaiter.h####
+
+
+
+
+
+
+
+
+#####Tokenizer.h####
+
+토큰 처리 유틸리티 클래스를 정의합니다...
+포함하는 헤더는 BaseDefine.h
+
+@class CTokenizer
+ - 문자열 분리기
+
+
+특정 문자를 기준으로 문자열을 잘라서 데이터를 파악합니다.
+
+#####Tokenizer.h####
+
+
+
+
+#####Cycle.h##### 
+
+
+루프 시간 조절 클래스를 정의합니다. 
+
+BaseDefine.h를 포함합니다..
+
+Cycle.h에는 CCycle class가 정의되어 있습니다.
+	
+CCycle class는
+ 루프 매니저 객체로써
+ 루프의 Cycle을 조절합니다..
+
+
+#####Cycle.h#####
+
+
+
+
+
+#####NumericTime.h#####
+
+
+숫자 기반 시간 클래스를 정의합니다.
+
+포함하는 헤더는 BaseDefine.h가 있습니다.
+
+NummericTime이라는 클래스가 정의되어 있습니다..
+
+시간을 표현하는 멤버 변수에 대해 다양한 함수를 제공합니다..
+
+
+#####NumericTime.h#####
+
+
+#####TickSaver.h#####
+
+타이머 클래스를 정의합니다.
+
+포함하는 헤더는 BaseDefine.h가 있습니다.
+
+
+
+
+#####TickSaver.h#####
+
+
+
+#####Start_End_Time.h#####
+시작,끝 시간을 저장하는 유틸리티 클래스를 정의합니다.
+
+LogService를 이용해 시작,끝을 로깅
+
+포함하는 헤더는 BaseDefine.h, TickSaver.h, LogService.h가 있습니다.
+
+Start_End_Time 클래스를 정의한다.
+
+
+#####Start_End_Time.h#####
+
+
+##### Work.h #####
+
+작업 관리자
+
+포함하는 헤더는 BaseDefine.h 가 있습니다.
+
+WorkListener 라는 클래스가 정의되어 있습니다.
+
+Work에 대한 처리 구현관련 함수정의
+
+네트워크 라이브러리에서의 활용
+
+ workPerformed()
+	하나의 세션에 대한 일반적인 이벤트를 처리
+ specificPerformed()
+	세션의 접속, 종료와 같은 소켓 이벤트가 발생했을 때의 처리
+ threadPerformed()
+	현재 수행중인 스레드가 주기적으로 할 일
+ sparePerformed()
+	머신 상황이 여유가 있을 때, 할 일
+ orderPerformed()
+	모든 세션에 대해 공통적으로 보낼 메시지를 처리
+
+##### Work.h #####
+
+
+
+
+##### MemoryLeadDetector.h #####
+
+Windows만 구현
+
+포함하는 헤더
+BaseDefine.h
+crtdbg.h
+
+
+CMemoryLeakDetector 클래스에서 
+
+덤프를 보고 브레이크 포인트 설정
+
+void BreakAllocateNumber(long number)
+
+##### MemoryLeadDetector.h #####
+
+
+
+
+#### NetworkUtil.h ####
+
+IP, MAC 주소 등을 구하는 유틸리티 집합 클래스를 정의합니다.
+포함하는 헤더는
+
+BaseDefine.h, Tokenizer.h, StringObj.h, Socket.h
+
+
+NetWorkUtil class에서
+
+getLocalMacAddress()와 getGatewayAddress() 함수 등으로 IP와MAC주소를 구합니다.
+
+#### NetworkUtil.h ####
+
+
+
+
+
+#### StaticProcessInfo.h ####
+프로세스의 시작/종료/예외를 기록하는 클래스를 정의합니다.
+프로그램에서 예외가 발생했을 때, 덤프를 남기는 것이 주요 기능입니다.
+
+포함하는 헤더는
+BaseDefine.h
+NumericTime.h
+ShareMemory.h
+dbgHelp.h 등이 있습니다.
+
+
+#### StaticProcessInfo.h ####
+
+
+#### BindTable.h ####
+어떤 데이터들의 바인드 관계 표현 클래스를 정의합니다.
+
+
+class BindTable
+
+바인드 집합을 표현하고,
+map의 래퍼이며, 맴버 메서드가 				         
+뮤텍스로 동기화한다는 특징이 
+있습니다.
+
+
+#### BindTable.h ####
+
+#### KeyValueManager.h ####
+STL map의 래퍼 클래스를 정의
+
+
+#### KeyValueManager.h ####
+
+
+
+#### KeyMultiValueManager.h ####
+STL multimap의 래퍼 클래스 정의
+
+
+#### KeyMultiValueManager.h ####
+
+
+
+
+#### WaitQueue.h ####
+WaitQueue 클래스 정의
+
+
+push
+	중복 키를 허용하지 않음
+	중복 키가 존재하지만 timeout 이후라면, 중복 키를 컨테이너에서 제거하고, 새 값 삽입
+	제거된 기존 데이터는 어떻게 처리? 확인 방법이 없는데 문제는 없는지?
+
+pop
+	timeout과 상관 없이 키에 대한 값을 pop
+
+pop_timeout
+	timeout이 지난 값들을 인자로 받은 vector에 push_back() 
+
+#### WaitQueue.h ####
+
+
+#### LumpData.h ####
+
+바이트 수준의 데이터를 다루기 위한 클래스를 정의합니다.
+
+class CLumpData
+생성자에 버퍼를 주면 호출자가 버퍼 삭제의 책임이 있음
+생성자에 크기를 주면 동적 할당하여 관리하고, 소멸자가 삭제
+
+
+#### LumpData.h ####
+
+
+
+#### ObjectPool.h ####
+오브젝트를 생성/관리하는 클래스 objectPool을 정의합니다.
+
+오브젝트는 기본생성자로 초기화 됩니다.
+
+
+#### ObjectPool.h ####
+
+
+
+#### LimitInstanceMgr.h ####
+
+제한된 갯수의 인스턴스를 운용하기 위한 클래스 정의
+
+-- 초기화등은 app에서 해야 한다 오직 인스턴스만 관리한다
+
+순수 추상 메서드인 create()와 close() 포함 
+
+#### LimitInstanceMgr.h ####
+
+
+#### DeleteObjInSTL.h ####
+STL 안의 오브젝트를 일괄 delete 하기 위한 유틸리티 클래스 정의
+오브젝트는 동적 할당된 포인터(new[]가 아닌 new로)이어야 한다. 
+
+#### DeleteObjInSTL.h ####
+
+
+
+####################################################################
+DBLibrary
+####################################################################
+
+다음은 DBLibrary입니다.
+
+DBLibrary는 ODBC,MySQL등 다양한 service 유틸을 관리하는
+
+클래스를 포함하고 있습니다.
+
+쿼리 큐, DB 타입 매칭 바인드 테이블, SQL 문자열 정리등을 지원합니다.
+
+
+그러면 DBLibrary에 있는 헤더파일을 하나씩 분석해 보겠습니다.
+
+
+#### DBService.h ####
+
+DBService.h는
+
+DBSession을 총괄 유지/관리하는 클래스를 정의합니다.
+
+포함하는 헤더는 
+	Thread.h
+	대부분의 DB 라이브러리
+	다수의 base 라이브러리
+
+class DBService는 singleton class로써
+
+DB 세션을 맺고, 쿼리를 수행하기 위해 반드시 사용해야 합니다.
+	DBString같은 별개의 유틸리티를 제외하고는 단독으로 사용 불가합니다
+반드시 DBService::initialize()를 가장 먼저 실행해야 합니다.
+	initialize()를 실행하면 DBService 스레드가 시작됩니다.
+
+#### DBService.h ####
+
+#### DBSessionProxy.h ####
+DBSessionProxy.h는
+ DBService 스레드에서 DB 세션을 얻어오기 위한 클래스를 정의합니다.
+	오직 DBSessionProxy::get()을 통해 DBSession을 얻을 수 있습니다.
+	세션 사용을 마치면 반드시 DBSessionProxy::release()를 호출해 주어야 합니다.
+
+#### DBSessionProxy.h ####
+
+
+#### DBSesstionManager.h ####
+
+DB Session을 관리하는 LimitInstanceMgr.
+DB SessionProxy와 DBService 스레드 간의 매개체 역할을 한다.
+
+#### DBSesstionManager.h ####
+
+#### DBSession.h ####
+
+	DBSession 인터페이스 정의
+
+	 DBStatement를 받아와 쿼리를 실행할 수 있다.
+			--get_statement()함수를 이용해 정보를 받아와서
+			--get_table_desc();함수를 이용합니다.
+			--get_Account();함수를 이용합니다.
+			
+	 DBError를 받아와 쿼리 수행 에러 정보를 확인하여 처리할 수 있다. 
+			--DBError::get_error()함수를 이용하여 에러를 찾고 처리합니다.
+
+	포함하는 헤더
+	 DBStatement.h
+	 DBError.h
+
+	
+#### DBSession.h ####
+
+
+
+
+
+#### DBStatement.h ####
+	
+	쿼리를 실행하기 위한 DBStatement 인터페이스 정의
+	 결과는 DBResultSet.h 에 있는 DBResultSet 클래스를 통해 확인할 수 있습니다.
+		
+	 에러는 DBSession에 세팅된다.
+	 virtual void set_error()에 세팅된다.
+	
+	포함하는 헤더
+	 DBResultSet.h
+
+
+#### DBStatement.h ####
+
+
+
+#### DBResultSet.h ####
+
+	쿼리 수행 결과가 담기는 인터페이스입니다.
+	next()를 먼저 호출해야 첫번째 줄이 세팅된다.
+?????????????????????????????????????
+#### DBResultSet.h ####
+
+
+#### DBError.h ####
+	쿼리 수행 에러가 담기는 인터페이스
+
+
+#### DBError.h ####
+
+
+
+#### DBLibs.h ####
+	
+	DBStat, DBAccount, DBTableDescription 클래스 정의
+	
+	포함된 헤더
+	 BaseDefine.h
+	 ShareMemory.h
+	 StaticProcessInfo.h
+	
+
+ DBStat Class
+
+	DB Session 유휴/활동 정보를 저장합니다.
+
+ DBAccount Class
+	name address ID Passwd Port DBName
+	등 정보를 저장합니다.
+	get/set메서드로 구성되어 있습니다.
+
+
+ DBTableDescription Class
+	DBTable에 대한 자세한 정보를 저장합니다.
+	
+#### DBLibs.h ####
+
+
+#### DBTypeTable.h ####
+
+	DBMS간 타입 변환을 위한 유틸리티 클래스를 정의합니다.~~~utility
+	
+	sql_server = "Microsoft SQL Server";
+
+	my_sql = "MySQL";
+
+	oracle = "Oracle";
+
+	postgres = "postgres";
+	
+	의 4개의 DB타입을 OS플랫폼에 따라 정의
+
+#### DBTypeTable.h ####
+
+
+
+
+#### DBQueryQ.h ####
+
+
+쿼리를 스레드로 처리하기 위한 queue 클래스를 정의합니다.
+	WorkListener와 Work을 구현해서 쿼리를 처리합니다.
+
+//////	WorkListener가 받는 Work이 하나로 고정 되어있음
+//////	쿼리에 따라 별개의 처리를 하려면
+//////		DBQueryQ를 상속받아 확장 구현
+//////		쿼리를 파싱
+//////	Work 객체의 타입을 활용할 수 없는 것이 아쉬움
+
+
+#### DBQueryQ.h ####
+
+
+
+
+#### DBString.h ####
+쿼리 문자열 연산을 위한 유틸리티 클래스를 정의합니다.
+
+	포함하는 헤더는
+	 DBTypeTable.h
+	 StringObj.h
+	가 있습니다
+
+
+#### DBString.h ####
+
+
+
+
+#### Database Library
+예제...
+
+
+####################################################################
+DBLibrary
+####################################################################
+
+
+
+####################################################################
+NWLibrary
+####################################################################
+
+Network Library는
+종속된 라이브러리로
+	Base Library
+
+패킷 파싱, 네트워크 프로토콜
+
+세션
+
+IO리스너 등의 넷 서비스가 정의되어 있습니다.
+
+
+#### ServerLib_Define.h ####
+네트워크 관련 상수와 에러 메세지 출력 함수를 정의합니다.
+
+int getNetworkErrorNu()
+ 발생한 에러의 번호를 반환합니다.
+
+print_network_error()
+ 발생한 에러를 문자열으로 로깅
+
+포함된 헤더
+ baseDefine.h
+ LogService.h
+ ObjectPool.h
+
+
+#### ServerLib_Define.h ####
+
+
+
+
+
+#### NetParser.h ####
+NetParser.h는 패킷을 분석하고, 만드는 클래스를 정의합니다.
+
+#### NetParser.h ####
+
+
+
+
+
+#### NetInstanceBuilder.h ####
+
+리스너와 세션 오브젝트 생성을 위한 ObjectPool 확장 클래스를 정의합니다.
+
+WIN32, LINUX, mac OSX 플랫폼 별로 정의되어 있습니다.
+
+#### NetInstanceBuilder.h ####
+
+
+
+
+
+#### NetServiceOrder.h ####
+
+NetServiceOrder.h는
+모든 세션에게 일괄적으로 패킷을 보내기 위해 저장하는 버퍼 클래스를 정의합니다.
+
+#### NetServiceOrder.h ####
+
+
+
+
+#### ProtocolBinder.h ####
+
+여러 프로토콜을 정의하여 사용하는 것을 돕기 위한 클래스를 정의합니다.
+
+
+#### ProtocolBinder.h ####
+
+
+#### NetworkSession.h ####
+
+연결된 소켓과 그에 대한 버퍼를 관리하고 send/recv 연산을 정의하는 클래스를 포함합니다.
+
+구현된 클래스
+	SessionOverlapped
+	 win32 IOCP_IOListener에서만 사용합니다.
+	SessionSync
+	 Lock을 걸어서 동기화를 보장하는 클래스입니다.
+
+
+
+#### NetworkSession.h ####
+
+
+
+#### NetLibs ####
+
+네트워크 서비스를 위한 유틸리티 클래스를 정의합니다.
+
+NetworkInitailize
+ 네트워크 초기화를 수행합니다.
+
+MsgPool 
+ 메세지 저장을 위한 ObjectPool을 관리합니다.
+
+NetworkStat
+ 현재 세션 수, 버퍼 사용, 메인 루프 카운터 등을 관리합니다.
+
+NetworkConfig
+ 서버의 config를 읽고, 관리합니다.
+
+
+#### NetLibs ####
+
+
+
+#### NetService.h ####
+네트워크 서비스를 위한 메인 스레드 클래스를 정의합니다.
+
+NetService::StartService() 시퀀스
+config 클래스 등을 통해 각종 자원을 초기화합니다.
+
+
+IO리스너 스레드 실행
+	소켓 이벤트를 처리하고,
+	패킷이 오면 NetService 메세지 큐에 소켓ID와 패킷을 push 합니다.
+
+NetService 메인 스레드 실행
+	Loop 
+		모든 세션을 확인해 해제될 세션을 끊고, 말소
+		WorkListener 메서드들을 호출하여 패킷 처리 등의 Work 수행
+
+
+#### NetService.h ####
+
+############################################################
+Board Library
+############################################################
+
+보드 게임의 로비/룸 구조 구현 라이브러리를 구현합니다.
+
+종속된 라이브러리
+Base Library
+
+#### LobbyService.h ####
+Board 라이브러리를 관리하기 위한 singleton class 정의합니다.
+ 각종 Manager에 대한 get/set 메서드를 포함합니다.
+
+
+
+#### LobbyService.h ####
+
+
+#### board_define.h ####
+보드 라이브러리 에러 상수를 정의합니다.
+
+#### board_define.h ####
+
+
+#### User.h ####
+User 클래스를 정의합니다.
+
+user type 과 (normal, observer) 
+
+network상태
+
+id,ip,passwd, room class와 friend관계로 방생성,입장,퇴장 등 관리
+
+
+//그림하나 추가 생각...
+#### User.h ####
+
+
+
+
+#### Room.h ####
+
+Room클래스를 정의합니다.
+
+room의 생성,관리
+ 
+room안의 유저 정보 총 관리 
+
+
+#### Room.h ####
+
+
+
+#### OperateProcess.h ####
+
+LobbyService에 명령 할 수 있는 클래스를 정의합니다
+
+커맨드 리스트는
+
+	drop_userid;
+	drop_room roomIdx;
+	all_bcastcontents 
+	all_bcast_all contents..컨텐츠로 보내준다
+	shutdown @min all
+	shutdown @min allservice
+
+#### OperateProcess.h ####
+
+
+#### AutoMakeRoom.h ####
+room 객체 생성을 위한 유틸리티 클래스를 정의합니다
+#### AutoMakeRoom.h ####
+
+
+#### action카테고리 ####
+
+	Alluser_RoomExit
+		AllUser_RoomExit & _Decorator 클래스 정의
+
+	LobbyEnter
+		LobbyEnter & _Decorator 클래스 정의
+
+	RoomCreate
+		RoomCreate & _Decorator 클래스를 정의합니다.
+
+	RoomEnter
+		RoomEnter & _Decorator 클래스를 정의합니다.
+
+	RoomExit
+		RoomExit & _Decorator 클래스를 정의합니다.
+
+	RoomToRoom
+		RoomToRoom & _Decorator 클래스를 정의합니다.
+
+
+
+#### action카테고리 ####
+
+
+#### UserManager.h ####
+모든 User에 대한 컨테이너 클래스를 정의합니다
+
+#### UserManager.h ####
+
+
+
+
+#### NotifyManager.h ####
+
+
+공지를 위한 NotifyManager 클래스 정의
+
+XML 파일을 통해 세팅
+	bool NotifyManager::load( char* file_name, size_t current_sec )
+		TiXmlDocument doc( file_name );
+
+특정 시간에 특정 시퀀스가 실행되도록 도움
+	NotifyManager::update_notify( Notify& nfy, size_t current_sec )
+
+
+#### NotifyManager.h ####
+
+#### Board lib 사용 방법 ####
+
+Board Library 사용 방법
+	1. 모든 순수 가상 메서드를 구현한다.
+	2. LobbyService를 초기화한다.
+	 2-1. setMgrInstance()로 manager 등록
+	 2-2. setActionInstance()로 action 등록
+	 2-3. initialize()로 xml 설정 파일을 읽고, 세팅
+	3. LobbyService에서 필요한 정보를 받아 쓴다
+
+#### Board lib 사용 방법 ####
+
+
+############################################################
+Board Library
+############################################################
+
+
+

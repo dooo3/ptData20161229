@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="euc-kr"?>
+<config>	
+	<server>
+		<listen>20202</listen>
+		<reuse_addr>1</reuse_addr>
+		<validate_new_connection>0</validate_new_connection>
+		<accept_init_count>0</accept_init_count>
+		<worker_count>2</worker_count>
+		<backlog_count>200</backlog_count>
+		<loop_cycle_tick>30</loop_cycle_tick>
+		<life_cycle_limit>0</life_cycle_limit>
+		<max_session>1000</max_session>
+		<forced_poller_set>none</forced_poller_set>
+	</server>
+
+	<db>
+	  <cycle_tick>30000</cycle_tick>
+	  <session_arrange_sec>60</session_arrange_sec>
+	  <reload_env_sec>60</reload_env_sec>
+	  <check_db_sec>60</check_db_sec>
+	</db>
+	
+	<db_session_info>
+		<info>
+			<name>test</name>
+			<ip>test</ip>
+			<id>manager</id>
+			<db>test</db>
+			<passwd>12341234</passwd>
+			<port>0</port>
+			<api>odbc</api>
+			<min>1</min>
+			<max>10</max>
+			<wait_time_tick>0</wait_time_tick>
+			<wait_count>7</wait_count>
+			<idle_remove_time>500</idle_remove_time>
+			<available_check>select 1</available_check>
+		</info>
+	</db_session_info>
+	<log_info>
+	  <info>
+	    <name>instance</name>
+	    <file>instance</file>
+	    <dir>log</dir>
+	    <type>11</type>
+  		<rotate>4</rotate>
+	  	<rotate_size>512</rotate_size>
+	  </info>
+	  <info>
+	    <name>debug</name>
+	    <file>debug</file>
+	    <dir>log</dir>
+	    <type>11</type>
+  		<rotate>4</rotate>
+	  	<rotate_size>512</rotate_size>
+	  </info>
+	   <info>
+	    <name>except</name>
+	    <file>except</file>
+	    <dir>log</dir>
+	    <type>10</type>
+  		<rotate>4</rotate>
+	  	<rotate_size>512</rotate_size>
+	  </info>
+	</log_info>
+	
+</config>
+
+<!--
+file
+   0 : date time ; 로테이트 시킬거면 확장자는 붙이지 않는것이 좋다
+dir
+   0 : current directory
+type
+   1 : consol
+   2 : file
+   3 : cpnsol | file
+   4 : tracer
+   5 : consol | tracer
+   6 : file | tracer
+   7 : consol | file | tracer
+   
+rotate
+   0 : none
+   1 : month
+   2 : day
+   3 : hour
+   4 : byte
+-->
+

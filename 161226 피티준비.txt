@@ -1,0 +1,410 @@
+(서비스 사업실 서버팀 유동금)
+
+(Library_세미나) 발표 시작하겠습니다.
+
+
+
+
+
+래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼
+(래퍼란 필요한 데이터를 받거나 쓰기 위해 데이터 형태를 세팅해 제공하는 서비스)
+래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼래퍼
+
+
+
+
+먼저 가장 중요한 Base Library부터 보겠습니다.
+
+Base Library는 범용 연산에 편의를 돕기 위한 라이브러리로
+
+파일 소켓 스레드 문자열처리
+
+로그 기록, 시간 계산, 시스템 정보 조회등을 지원하고
+
+STL확장 자료구조도 지원합니다.
+
+그럼 이제부터 헤더파일을 하나씩 분석해 보겠습니다.
+
+
+
+
+
+######BaseDefine.h######
+
+먼저 BaseDefine.h는
+
+모든 Base Library가 포함하는 최상위 헤더로
+
+여러 플랫폼 호환과 편의를 위해 각종 메크로를 정의해 놓은 header파일 입니다.
+
+포함하는 헤더로는 
+
+iostream 외 기타표준, 시스템, 소켓 함수들이 있고
+ShelConnect.h 와 Tokenizer.h 또한 포함하고 있습니다.
+
+
+
+BaseDefine에 정의 되어있는 여러 class중 몇가지 살펴 보겠습니다.
+
+
+SystemInfomation이라고 하는 class는 
+
+시스템 정보 조회를 위해 정적 멤버 함수들을 갖는 utility class로
+
+cpu count, os name, linux_kernel_version, available_iocp, hyperthread등의 정보를 가집니다.
+
+
+
+ArgInfo라고 하는 class는
+
+프로그램 인자 저장을 위한 utility class로
+
+size와 다양한 형변환 함수를 가지고 있습니다.
+
+
+ErrorInfomation이라고 하는 class는
+
+하나의 에러 정보를 표현하는 class로
+
+에러에 해당하는 함수 코드 메세지 라인 등을 리턴하는 함수들을 가지고 있습니다.
+
+######BaseDefine.h######
+
+
+
+
+
+######StringObj.h######
+
+
+StringObj.h는 string Util class로
+
+C++ 표준 String의 래퍼 클래스를 정의합니다.
+
+포함하는 헤더로는
+
+stdlib.h, string.h, windows가 있고, BaseDefine.h는 포함하지 않습니다.
+
+
+StringObj에는 StringObj class하나만 있는데
+
+각종 연산자 오버라이딩 함수랑
+
+string관련 함수
+
+형변환 함수
+
+getByteType함수 등이 있습니다.
+
+######StringObj.h######
+
+
+
+######fileObj.h######
+
+fileObj.h는 하나의 파일에 대한 래퍼 클래스를 정의합니다.
+
+포함하는 헤더파일은 BaseDefine.h가 있습니다.
+
+fileObj에도 fileObj클래스 하나만 있는데
+
+파일 존재 유무 확인 함수,
+
+파일 삭제 함수,
+
+파일 열기 / 닫기 함수,
+
+파일 속 내용 읽기,파일 사이즈 체크 새로고침 등등 함수가 있습니다.
+
+
+######fileObj.h######
+
+
+######IniFile.h######
+IniFile.h 는 ini파일에 대한 래퍼 클래스를 정의합니다.
+
+(ini파일이란)
+간단히 말하면 응용 프로그램이 실행될 때 필요한 초기화 정보를 담고있는 파일 
+(INItialization file)
+
+포함하는 헤더 파일은 FileObj.h가 있습니다.
+
+IniFile.h에도 마찬가지로 CIniFile클래스 하나만 있는데
+
+파일을 Read함수
+	Write함수
+	Remove함수 등이 있습니다. 
+
+######IniFile.h######
+
+######BitField.h#####
+BitField.h는 배열로 비트필드를 표현하는 클래스를 정의합니다.
+또한
+비트와비트필드 연산 매크로를 정의합니다.
+
+포함하는 헤더는
+
+BaseDefine.h가 있습니다.
+
+
+BitField.h에는 BitField 클래스가 있는데
+
+BitField클래스는
+
+비트 배열을 생성하고
+
+
+특이점으로는 
+
+0이란 인덱스는 존재하지 않고, 1번째 비트 부터 생정자에서 지정한 count까지 지정됩니다.
+
+
+array를 초기화 하는 함수
+
+index를 찾는 함수
+
+사이즈 확인 함수 등이 있습니다.
+
+
+######BitField.h#####
+
+
+#####Socket.h#####
+Socket.h는 소켓 래퍼 클래스를 정의합니다.
+
+포함하는 헤더로는 
+
+BaseDefine.h,windows헤더 ,각종 Linux 네트워크 헤더 등이 있습니다.
+
+Socket.h에 socket class에는 
+
+각종 소캣연결에 필요한 함수와 (connect, accept, listen, closesocket,)
+
+setTimeOut함수(time값 리턴)
+
+setTcpNoDealy함수(flag 리턴)
+
+setIOType함수(block 하는 역할 [bool isBlock 변수 리턴] ) 등이 있다
+ 
+#####Socket.h#####
+ 
+
+
+#####Thread.h#####
+
+
+
+thread.h 는 스레드 (win32 thread & pthread) 래퍼 클래스,
+크리티컬 섹션과 뮤텍스 래퍼 클래스를 정의합니다.
+
+포함하는 헤더는
+
+BaseDefine.h
+
+windows
+
+linux
+각종 리눅스 네트워크 헤더를 포함합니다.
+
+thread.h 에는 Clock,Notify,BlanketLock,CThread 총 4개의 클래스가 정의 되어 있습니다.
+
+Clock
+크리티컬 섹션(windows)/pthread mutex(linux)의 래퍼
+
+Notify
+therad의 suspend(wait())와 resume(call())을 수행
+
+
+
+BlanketLock
+CLock의 래퍼 클래스
+setLock()을 통해 외부에서 만든 lock을 제어할 수 있다.
+
+락이 필요한 부분에서 호출만 해준다.
+(소멸자에서 Exit해주기 때문에 따로 Leave를 안해줘도 됩니다.)
+
+CThread
+thread의 래퍼 클래스
+
+스레드의 동작을 관리하는 클래스 
+
+start, active, stop, resume(실행대기상태로 만듬), suspend(일시정지), getId 등의 함수 존재
+
+
+
+#####Thread.h#####
+
+
+######shareMemory.h######
+shareMemory.h는 공유 메모리 파일 클래스를 정의합니다..
+
+포함하는 헤더는
+BaseDefine.h
+
+shareMemory클래스를 상속받는 클래스
+WinShareMemory랑 UnixShareMemory를 이용하여 
+두 플렛폼을 모두 관리한다.
+
+
+######shareMemory.h######
+
+
+##### Log.h #####
+Log.h는 파일 로깅을 위한 클래스를 정의합니다.  (파일 로깅이란....)
+
+포함하는 헤더는 BaseDefine.h가 있습니다.
+
+CLogLock 클래스를 정의합니다.
+ 크리티컬 섹션, pthread mutex의 래퍼
+
+##### Log.h #####
+
+
+
+####LogService.h####
+CLog 컨테이너 클래스를 정의합니다.
+
+포함하는 헤더는 BaseDefine.h, StringObj.h, tinyxml.h가 있습니다.
+
+LogService클래스는 주어진 xml config파일을 기반으로 CLog를 동적 할당/세팅한다
+
+####LogService.h####
+
+
+
+####BusyWaiter.h####
+
+횟수 기반 wait 클래스를 정의합니다.
+
+포함된 헤더는 BaseDefine.h가 있습니다.
+
+BusyWaiter 클래스 안에
+
+wait()
+ wait time이 0이면 무조건 Sleep(0)하고 리턴
+ 아니면 wait_count_만큼 wait()이 호출되었을 때까지 Sleep( wait_time_ )
+
+
+####BusyWaiter.h####
+
+
+
+
+
+
+
+
+#####Tokenizer.h####
+
+토큰 처리 유틸리티 클래스를 정의합니다...
+포함하는 헤더는 BaseDefine.h
+
+@class CTokenizer
+ - 문자열 분리기
+
+
+특정 문자를 기준으로 문자열을 잘라서 데이터를 파악합니다.
+
+#####Tokenizer.h####
+
+
+
+
+#####Cycle.h##### 
+
+루프 시간 조절 클래스를 정의합니다. 
+
+BaseDefine.h를 포함합니다..
+
+Cycle.h에는 CCycle class가 정의되어 있습니다.
+	
+CCycle class는
+ 루프 매니저 객체로써
+ 루프의 Cycle을 조절합니다..
+
+
+
+#####Cycle.h#####
+
+
+
+
+
+#####NumericTime.h#####
+숫자 기반 시간 클래스를 정의합니다.
+
+포함하는 헤더는 BaseDefine.h가 있습니다.
+
+NummericTime이라는 클래스가 정의되어 있습니다..
+
+시간을 표현하는 멤버 변수에 대해 다양한 함수를 제공합니다..
+
+
+#####NumericTime.h#####
+
+
+#####TickSaver.h#####
+
+타이머 클래스를 정의합니다.
+
+포함하는 헤더는 BaseDefine.h가 있습니다.
+
+
+
+
+#####TickSaver.h#####
+
+
+
+#####Start_End_Time.h#####
+시작,끝 시간을 저장하는 유틸리티 클래스를 정의합니다.
+
+LogService를 이용해 시작,끝을 로깅
+
+포함하는 헤더는 BaseDefine.h, TickSaver.h, LogService.h가 있습니다.
+
+Start_End_Time 클래스를 정의한다.
+
+
+#####Start_End_Time.h#####
+
+
+##### Work.h #####
+
+작업 관리자
+
+포함하는 헤더는 BaseDefine.h 가 있습니다.
+
+WorkListener 라는 클래스가 정의되어 있습니다.
+
+Work에 대한 처리 구현관련 함수정의
+
+네트워크 라이브러리에서의 활용
+
+ workPerformed()
+	하나의 세션에 대한 일반적인 이벤트를 처리
+ specificPerformed()
+	세션의 접속, 종료와 같은 소켓 이벤트가 발생했을 때의 처리
+ threadPerformed()
+	현재 수행중인 스레드가 주기적으로 할 일
+ sparePerformed()
+	머신 상황이 여유가 있을 때, 할 일
+ orderPerformed()
+	모든 세션에 대해 공통적으로 보낼 메시지를 처리
+
+##### Work.h #####
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
